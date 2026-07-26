@@ -1,217 +1,140 @@
-# HTTP Calls for Roon APIs
----------------------------
+# roon-extension-http-api
 
-These APIs are run by http calls.
-There is a list below with examples that calls these APIs.
+HTTP API wrapper for controlling [Roon](https://roon.app/) audio streaming.
 
-Have tried it with iOs swift and iOS' Workflow app to create widgets.
+A Node.js Express server that exposes Roon control via REST endpoints.
 
-## Prerequisite
+Forked from [st0g1e/roon-extension-http-api](https://github.com/st0g1e/roon-extension-http-api) with enhancements from community forks.
 
-These apis are running on Node.js. Below are the steps to install it.
+---
 
-* On Windows, install from the above link.
-* On Mac OS, you can use [homebrew](http://brew.sh) to install Node.js.
-* On Linux, you can use your distribution's package manager, but make sure it installs a recent Node.js. Otherwise just install from the above link.
-
-Make sure you are running node 5.x or higher.
-```sh
-node -v
-```
-
-For example:
+## Quick Start
 
 ```sh
-$ node -v
-v5.10.1
+# 1. Install dependencies
+npm install
+
+# 2. Configure
+cp .env-sample .env
+# edit .env with your settings (HOST, PORT, etc.)
+
+# 3. Run
+node .
+
+# 4. Enable in Roon
+# Go to Roon Settings → Extensions → enable "roon-http-api"
 ```
 
-## Installing roon-extension-http-api
+## Interactive API Documentation (Swagger)
 
-1. Download the repository.
-* Go to [http-extension-http-api](https://github.com/st0g1e/roon-extension-http-api) page
-* Click on "Clone or Download"
-* Click "Download Zip"
+Once running, open:
 
-2. Install
-* Copy the downloaded zip to the desired folder
-* unzip
-* open terminal/command line and change directory to the folder
-  ```
-  cd [PATH]
-  ```
-* Install Dependencies
-  ```
-  npm install
-  ```
-* (Optional) To remove the running log
-  Comment console.log lines at
-  - node_modules/node-roon-api/lib.js
-  - node_modules/node-roon-api/moo.js ( REQUEST)
-  - node_modules/node-roon-api/moomsj.js (CONTINUE and COMPLETE)
+**http://[your-host]:[port]/api-docs**
 
-3. Running
-  ```
-  node .
-  ```
+Example: [http://localhost:3001/api-docs](http://localhost:3001/api-docs)
 
-4. Enable the extension
-   In Roon, go to Settings -> Extensions and click on the "enable" button next to the roon-extension-http-api extension details.
+Try out any endpoint directly from your browser.
 
-** Testing in Browser
+## Configuration
 
-You should now the IP address where the extension is (for the same computer, you can use localhost. the default port is 3001.
-This can be changed by changing the PORT value in server.js
+Copy `.env-sample` to `.env` and edit:
 
-Open a browser and go to the following link:
-```
-http://localhost:3001/roonAPI/listZones
+```sh
+cp .env-sample .env
 ```
 
-## Available APIs
-The full list of APIs can be seen on routes.js
+| Variable | Default | Description |
+|---|---|---|
+| `HOST` | `localhost` | Bind address |
+| `PORT` | `3001` | HTTP port |
+| `SWAGGER_HOST` | `HOST` | Host shown in Swagger UI |
+| `SWAGGER_PORT` | `PORT` | Port shown in Swagger UI |
+| `API_TOKEN` | *(empty)* | API token for authentication |
 
-The format to call these APIs are:
+## Docker
+
+```sh
+docker build -t roon-http-api .
+docker run -p 3001:3001 -v $(pwd)/.env:/app/.env roon-http-api
 ```
-http://[IPAddress]:[Port]/roonAPI/[APIName]
-```
 
-The APIs are:
-* Transport APIs
-  - getCore
-  ```
-     http://localhost:3001/roonAPI/getCore
-  ```
-  - listZone
-  ```
-     http://localhost:3001/roonAPI/listZones
-  ```
-  - getZone
-  ```
-     http://localhost:3001/roonAPI/getZone?zoneId=[zoneId as found from listZones]
-  ```
-  - play_pause
-  ```
-     http://localhost:3001/roonAPI/play_pause?zoneId=[zoneId as found from listZones]
-  ```
-  - play
-  ```
-     http://localhost:3001/roonAPI/play?zoneId=[zoneId as found from listZones]
-  ```
-  - pause
-  ```
-     http://localhost:3001/roonAPI/pause?zoneId=[zoneId as found from listZones]
-  ```
-  - stop
-  ```
-     http://localhost:3001/roonAPI/stop?zoneId=[zoneId as found from listZones]
-  ```
-  - previous
-  ```
-     http://localhost:3001/roonAPI/previous?zoneId=[zoneId as found from listZones]
-  ```
-  - next
-  ```
-     http://localhost:3001/roonAPI/next?zoneId=[zoneId as found from listZones]
-  ```
-  - change_volume
-  ```
-     http://localhost:3001/roonAPI/change_volume?volume=[Volume % from 0 to 100]&outputId=[outputId as found from listZones]
-  ```
-  - change_volume_relative
-  ```
-     http://localhost:3001/roonAPI/change_volume_relative?volume=[volume change from current]&outputId=[outputId as found from listZones]
-  ```
-  - transfer zone
-  ```
-     http://localhost:3001/roonAPI/transferZone?fromZoneId=[source zoneId]&toZoneId=[destination zoneId]
-  ```
+## API Endpoints
 
-* Image APIs
-  - getImage
-  ```
-     http://localhost:3001/roonAPI/getImage?image_key=[image_key as found from the browser APIs]
-  ```
-  - getMediumImage
-  ```
-     http://localhost:3001/roonAPI/getMediumImage?image_key=[image_key as found from the browser APIs]
-  ```
-  - getIcon
-  ```
-     http://localhost:3001/roonAPI/getIcon?image_key=[image_key as found from the browser APIs]
-  ```
+All endpoints under `/roonAPI/`:
 
-* Browser APIs  
-  - listByItemKey (list_size always returns 100)
-  ```
-     http://localhost:3001/roonAPI/listByItemKey?zoneId=[zoneId]&item_key=[item_key from Browser APIs]&page=[page number]&list_size=[number of return per page]
-  ```
-  - listSearch (list_size always returns 100)
-  ```
-     http://localhost:3001/roonAPI/listSearch?zoneId=[zoneId]&toSearch=[search string]&list_size=[hits per page]
-  ```
-  - goUp (list_size always returns 100)
-  ```
-     http://localhost:3001/roonAPI/goUp?zoneId=[zoneId]&list_size=[hits per page]
-  ```
-  - goHome (list_size always returns 100)
-  ```
-     http://localhost:3001/roonAPI/goHome?zoneId=[zoneId]&list_size=[hits per page]
-  ```
-  - listGoPage (list_size always returns 100)
-  ```
-     http://localhost:3001/roonAPI/listGoPage?page=[page number]&list_size=[hits per page]
-  ```
+### Transport
 
-  * Group / Ungroup APIs (Input Type: POST)
-    - group, post parameter is JSON array name "output"
-    ```
-       http://localhost:3001/roonAPI/group
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/roonAPI/listZones` | List all zones |
+| GET | `/roonAPI/listOutputs` | List all outputs |
+| GET | `/roonAPI/getZone?zoneId=` | Get zone details |
+| GET | `/roonAPI/getCore` | Connected Roon Core info |
+| GET | `/roonAPI/play?zoneId=` | Play |
+| GET | `/roonAPI/pause?zoneId=` | Pause |
+| GET | `/roonAPI/play_pause?zoneId=` | Toggle play/pause |
+| GET | `/roonAPI/stop?zoneId=` | Stop |
+| GET | `/roonAPI/next?zoneId=` | Next track |
+| GET | `/roonAPI/previous?zoneId=` | Previous track |
+| GET | `/roonAPI/change_volume?outputId=&volume=` | Set volume absolute (0-100) |
+| GET | `/roonAPI/change_volume_relative?outputId=&volume=` | Change volume relative |
+| GET | `/roonAPI/mute?outputId=` | Mute (volume to 0) |
 
-       Parameter:
+### Grouping
 
-       {
-         "output": [
-          "1701004f66ca89348d7baf26a8ca037bc5b1",
-          "17016922fd031e4440ed273671f3fee578a6"
-        ]
-      }
-    ```
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/roonAPI/group` | Group outputs (`body: { "output": [...] }`) |
+| POST | `/roonAPI/ungroup` | Ungroup outputs |
+| GET | `/roonAPI/transferZone?fromZoneId=&toZoneId=` | Transfer playback |
 
-    - ungroup, post parameter is JSON array name "output"
-    ```
-       http://localhost:3001/roonAPI/ungroup
+### Browse
 
-       Parameter:
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/roonAPI/listByItemKey?zoneId=&item_key=&page=&list_size=` | Browse by item key |
+| GET | `/roonAPI/listSearch?zoneId=&toSearch=&list_size=` | Search library |
+| GET | `/roonAPI/goUp?zoneId=&list_size=` | Browse up one level |
+| GET | `/roonAPI/goHome?zoneId=&list_size=` | Browse to root |
+| GET | `/roonAPI/listGoPage?page=&list_size=` | Go to page |
+| GET | `/roonAPI/listRefresh?zoneId=` | Refresh browse |
 
-       {
-         "output": [
-          "1701004f66ca89348d7baf26a8ca037bc5b1",
-          "17016922fd031e4440ed273671f3fee578a6"
-        ]
-      }
-    ```
+### Internet Radio
 
-* Timers
-  - getTimers
-  ```
-     http://localhost:3001/roonAPI/getTimers
-  ```
-  - addTimer
-  ```
-     http://localhost:3001/roonAPI/addTimer?zoneId=[zoneId]&time=[unix time in millisecond]&command=[play|[pause]&isRepeat=[0|1]
-  ```
-  - removeTimer
-  ```
-     http://localhost:3001/roonAPI/removeTimer?zoneId=[zoneId]&time=[unix time in milliseconds]&command=[play|pause]&isRepeat=[0|1]
-  ```
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/roonAPI/getInternetRadios?zoneId=&toSearch=` | Search & auto-play internet radio |
 
-## Examples
-There are several examples that calls the APIs above under the htmls directory.
+### Images
 
-URL: http://localhost:3001/player.html
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/roonAPI/getImage?image_key=` | Image (300x200) |
+| GET | `/roonAPI/getMediumImage?image_key=` | Image (640x480) |
+| GET | `/roonAPI/getIcon?image_key=` | Icon (100x100) |
+| GET | `/roonAPI/getOriginalImage?image_key=` | Original size |
 
-These are:
-- player.html (simple player with play/pause, next, previous and volume slider where available)
-- browser.html (simple viewer list, can play the songs)
-- timers.html (simple timers to play/pause songs)
+### Timers
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/roonAPI/getTimers` | List timers |
+| GET | `/roonAPI/addTimer?zoneId=&time=&command=&isRepeat=` | Add timer |
+| GET | `/roonAPI/removeTimer?zoneId=&time=&command=&isRepeat=` | Remove timer |
+
+## Front-end Examples
+
+Open in browser:
+
+- **Player**: [http://localhost:3001/player.html](http://localhost:3001/player.html)
+- **Browser**: [http://localhost:3001/browser.html](http://localhost:3001/browser.html)
+- **Timers**: [http://localhost:3001/timers.html](http://localhost:3001/timers.html)
+
+## Features merged from community forks
+
+- **Core connection safety** – All endpoints check if Roon Core is connected ([@thingspi](https://github.com/thingspi/roon-extension-http-api))
+- **Mute endpoint** – Quick mute convenience ([@thingspi](https://github.com/thingspi/roon-extension-http-api))
+- **Swagger API docs** – Interactive docs at `/api-docs` ([@thingspi](https://github.com/thingspi/roon-extension-http-api))
+- **Dockerfile** – Containerized deployment ([@thingspi](https://github.com/thingspi/roon-extension-http-api))
+- **Internet Radio search** – Search and auto-play radio stations ([@CaseyRo](https://github.com/CaseyRo/roon-extension-http-api))
+- **Group/Ungroup/Transfer** – Zone grouping and playback transfer ([@nidr](https://github.com/nidr/roon-extension-http-api))
