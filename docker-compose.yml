@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  roon-http-api:
+    build: .
+    container_name: roon-http-api
+    restart: unless-stopped
+    # host network mode is required for Roon's UDP discovery to work
+    network_mode: host
+    volumes:
+      - ./config.json:/app/config.json
+      - ./.env:/app/.env
