@@ -35,6 +35,9 @@ Example: [http://localhost:3001/api-docs](http://localhost:3001/api-docs)
 
 Try out any endpoint directly from your browser.
 
+> If `API_TOKEN` is set in `.env`, Swagger will automatically include the token.
+> Click the **Authorize** button in Swagger UI and enter: `Bearer your-token`.
+
 ## Configuration
 
 Copy `.env-sample` to `.env` and edit:
@@ -49,14 +52,24 @@ cp .env-sample .env
 | `PORT` | `3001` | HTTP port |
 | `SWAGGER_HOST` | `HOST` | Host shown in Swagger UI |
 | `SWAGGER_PORT` | `PORT` | Port shown in Swagger UI |
-| `API_TOKEN` | *(empty)* | API token for authentication |
+| `API_TOKEN` | *(empty)* | API token for authentication (set a value to enable) |
 
 ## Docker
 
+### Build & run manually
+
 ```sh
 docker build -t roon-http-api .
-docker run -p 3001:3001 -v $(pwd)/.env:/app/.env roon-http-api
+docker run --network host -v $(pwd)/config.json:/app/config.json -v $(pwd)/.env:/app/.env roon-http-api
 ```
+
+### Using docker-compose
+
+```sh
+docker compose up -d
+```
+
+> `network_mode: host` is required for Roon's UDP discovery protocol to work across the network.
 
 ## API Endpoints
 
