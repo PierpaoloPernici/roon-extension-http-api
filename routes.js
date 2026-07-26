@@ -193,6 +193,127 @@ module.exports = function(app) {
 
     /**
      * @swagger
+     * /roonAPI/seek:
+     *   get:
+     *     description: Seek to a position within the current track
+     *     parameters:
+     *       - in: query
+     *         name: zoneId
+     *         schema:
+     *           type: string
+     *         required: true
+     *       - in: query
+     *         name: seconds
+     *         schema:
+     *           type: number
+     *         required: true
+     *       - in: query
+     *         name: how
+     *         schema:
+     *           type: string
+     *           enum: [absolute, relative]
+     *         description: "absolute or relative (default: absolute)"
+     *     responses:
+     *       200:
+     *         description: OK
+     */
+    app.get('/roonAPI/seek', apis.seek);
+
+    /**
+     * @swagger
+     * /roonAPI/standby:
+     *   get:
+     *     description: Put an output into standby
+     *     parameters:
+     *       - in: query
+     *         name: outputId
+     *         schema:
+     *           type: string
+     *         required: true
+     *     responses:
+     *       200:
+     *         description: OK
+     */
+    app.get('/roonAPI/standby', apis.standby);
+
+    /**
+     * @swagger
+     * /roonAPI/wake:
+     *   get:
+     *     description: Wake an output from standby (convenience switch)
+     *     parameters:
+     *       - in: query
+     *         name: outputId
+     *         schema:
+     *           type: string
+     *         required: true
+     *     responses:
+     *       200:
+     *         description: OK
+     */
+    app.get('/roonAPI/wake', apis.wake);
+
+    /**
+     * @swagger
+     * /roonAPI/zoneSettings:
+     *   get:
+     *     description: Change zone settings (shuffle, loop, auto_radio)
+     *     parameters:
+     *       - in: query
+     *         name: zoneId
+     *         schema:
+     *           type: string
+     *         required: true
+     *       - in: query
+     *         name: shuffle
+     *         schema:
+     *           type: boolean
+     *       - in: query
+     *         name: loop
+     *         schema:
+     *           type: string
+     *           enum: [loop, loop_one, disabled]
+     *       - in: query
+     *         name: auto_radio
+     *         schema:
+     *           type: boolean
+     *     responses:
+     *       200:
+     *         description: OK
+     */
+    app.get('/roonAPI/zoneSettings', apis.zoneSettings);
+
+    /**
+     * @swagger
+     * /roonAPI/pauseAll:
+     *   get:
+     *     description: Pause all zones
+     *     responses:
+     *       200:
+     *         description: OK
+     */
+    app.get('/roonAPI/pauseAll', apis.pauseAll);
+
+    /**
+     * @swagger
+     * /roonAPI/muteAll:
+     *   get:
+     *     description: Mute or unmute all zones
+     *     parameters:
+     *       - in: query
+     *         name: how
+     *         schema:
+     *           type: string
+     *           enum: [mute, unmute]
+     *         description: "mute or unmute (default: mute)"
+     *     responses:
+     *       200:
+     *         description: OK
+     */
+    app.get('/roonAPI/muteAll', apis.muteAll);
+
+    /**
+     * @swagger
      * /roonAPI/play:
      *   get:
      *     description: Start playback for a zone
