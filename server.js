@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var swaggerJsdoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express');
+require('dotenv').config();
 
 var app = express();
 const bodyParser = require('body-parser');
@@ -9,7 +10,10 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const PORT = 3001;
+var HOST = process.env.HOST || 'localhost';
+var PORT = process.env.PORT || 3001;
+var SWAGGER_HOST = process.env.SWAGGER_HOST || HOST;
+var SWAGGER_PORT = process.env.SWAGGER_PORT || PORT;
 
 // Swagger configuration
 const swaggerOptions = {
@@ -21,7 +25,7 @@ const swaggerOptions = {
       description: 'HTTP API wrapper for the Roon audio streaming system',
     },
     servers: [
-      { url: 'http://localhost:' + PORT, description: 'Local server' },
+      { url: 'http://' + SWAGGER_HOST + ':' + SWAGGER_PORT, description: 'Roon HTTP API' },
     ],
   },
   apis: ['./routes.js'],
@@ -40,6 +44,6 @@ app.use(function(req, res, next) {
 
 require('./routes')(app);
 
-app.listen(PORT);
-
-console.log('Listening on port: ' + PORT);
+app.listen(PORT, HOST, function() {
+  console.log('Listening on ' + HOST + ':' + PORT);
+});
