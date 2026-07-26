@@ -1,15 +1,17 @@
 {
-  "name"                      : "roon-http-api",
-  "description"               : "st0g1e.roon-http-api",
-  "version"                   : "1.0.4",
-  "main"                      : "server.js",
-  "private"                   : true,
+  "name": "roon-extension-http-api",
+  "description": "HTTP API for controlling Roon audio streaming",
+  "version": "1.1.0",
+  "main": "server.js",
+  "private": true,
   "dependencies": {
-    "node-roon-api"           : "github:roonlabs/node-roon-api",
-    "node-roon-api-image"     : "github:roonlabs/node-roon-api-image",
-    "node-roon-api-status"    : "github:roonlabs/node-roon-api-status",
-    "node-roon-api-transport"	: "github:roonlabs/node-roon-api-transport",
-    "node-roon-api-browse"    : "github:roonlabs/node-roon-api-browse",
-    "express"                 : "4.x"
+    "express": "4.x",
+    "node-roon-api": "github:roonlabs/node-roon-api",
+    "node-roon-api-browse": "github:roonlabs/node-roon-api-browse",
+    "node-roon-api-image": "github:roonlabs/node-roon-api-image",
+    "node-roon-api-status": "github:roonlabs/node-roon-api-status",
+    "node-roon-api-transport": "github:roonlabs/node-roon-api-transport",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }
