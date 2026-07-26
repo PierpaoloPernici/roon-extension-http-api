@@ -5,6 +5,7 @@
   "main": "server.js",
   "private": true,
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "4.x",
     "node-roon-api": "github:roonlabs/node-roon-api",
     "node-roon-api-browse": "github:roonlabs/node-roon-api-browse",
