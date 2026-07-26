@@ -108,6 +108,17 @@ All endpoints under `/roonAPI/`:
 | GET | `/roonAPI/change_volume?outputId=&volume=` | Set volume absolute (0-100) |
 | GET | `/roonAPI/change_volume_relative?outputId=&volume=` | Change volume relative |
 | GET | `/roonAPI/mute?outputId=` | Mute (volume to 0) |
+| GET | `/roonAPI/seek?zoneId=&seconds=&how=` | Seek within track (absolute/relative) |
+| GET | `/roonAPI/standby?outputId=` | Put output in standby |
+| GET | `/roonAPI/wake?outputId=` | Wake output from standby |
+| GET | `/roonAPI/zoneSettings?zoneId=&shuffle=&loop=&auto_radio=` | Change shuffle/loop/auto_radio |
+
+### Global
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/roonAPI/pauseAll` | Pause all zones |
+| GET | `/roonAPI/muteAll?how=mute` | Mute or unmute all zones |
 
 ### Grouping
 
