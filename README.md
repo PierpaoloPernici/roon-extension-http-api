@@ -65,8 +65,24 @@ docker run --network host -v $(pwd)/config.json:/app/config.json -v $(pwd)/.env:
 
 ### Using docker-compose
 
+**First start / rebuild after changes:**
 ```sh
-docker compose up -d
+docker compose up -d --build
+```
+
+**Restart (no rebuild):**
+```sh
+docker compose restart
+```
+
+**Stop:**
+```sh
+docker compose down
+```
+
+**View logs:**
+```sh
+docker compose logs -f
 ```
 
 > `network_mode: host` is required for Roon's UDP discovery protocol to work across the network.
