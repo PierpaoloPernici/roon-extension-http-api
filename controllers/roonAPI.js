@@ -143,6 +143,48 @@ exports.mute = function(req, res) {
   res.send({ "status": SUCCESS_MESSAGE });
 };
 
+exports.seek = function(req, res) {
+  if (!requireCore(res)) return;
+  var how = req.query['how'] || 'absolute';
+  core.services.RoonApiTransport.seek(req.query['zoneId'], how, parseFloat(req.query['seconds']));
+  res.send({ "status": SUCCESS_MESSAGE });
+};
+
+exports.standby = function(req, res) {
+  if (!requireCore(res)) return;
+  core.services.RoonApiTransport.standby(req.query['outputId'], {});
+  res.send({ "status": SUCCESS_MESSAGE });
+};
+
+exports.wake = function(req, res) {
+  if (!requireCore(res)) return;
+  core.services.RoonApiTransport.convenience_switch(req.query['outputId'], {});
+  res.send({ "status": SUCCESS_MESSAGE });
+};
+
+exports.zoneSettings = function(req, res) {
+  if (!requireCore(res)) return;
+  var settings = {};
+  if (req.query['shuffle'] !== undefined) settings.shuffle = req.query['shuffle'] === 'true';
+  if (req.query['loop'] !== undefined)     settings.loop = req.query['loop'];
+  if (req.query['auto_radio'] !== undefined) settings.auto_radio = req.query['auto_radio'] === 'true';
+  core.services.RoonApiTransport.change_settings(req.query['zoneId'], settings);
+  res.send({ "status": SUCCESS_MESSAGE });
+};
+
+exports.pauseAll = function(req, res) {
+  if (!requireCore(res)) return;
+  core.services.RoonApiTransport.pause_all();
+  res.send({ "status": SUCCESS_MESSAGE });
+};
+
+exports.muteAll = function(req, res) {
+  if (!requireCore(res)) return;
+  var how = req.query['how'] || 'mute';
+  core.services.RoonApiTransport.mute_all(how);
+  res.send({ "status": SUCCESS_MESSAGE });
+};
+
 
 // --------------- Image APIs ------------------
 
